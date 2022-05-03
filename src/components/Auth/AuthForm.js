@@ -1,38 +1,47 @@
-import React, { useRef, useState } from "react";
+import { useState, useRef, useContext } from 'react';
 
-import { Form, Button } from "react-bootstrap";
+import AuthContext from '../../store/auth-context';
+import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
-  const [isLoginForm, setIsLogiForm] = useState(true);
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
+
+  const authCtx = useContext(AuthContext);
+
+  const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const loginEmailRef = useRef();
-  const loginPasswordRef = useRef();
+
   const switchAuthModeHandler = () => {
-    setIsLogiForm(() => !isLoginForm);
+    setIsLogin((prevState) => !prevState);
   };
-  const submitHandler = (e) => {
-    e.preventDefault();
-    const loginEmailValue = loginEmailRef.current.value;
-    const loginPasswordValue = loginPasswordRef.current.value;
-    if (loginPasswordValue.length <= 6) console.log("error");
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+
+    const enteredEmail = emailInputRef.current.value;
+    const enteredPassword = passwordInputRef.current.value;
+
+    // optional: Add validation
+
     setIsLoading(true);
     let url;
-    if (isLoginForm) {
+    if (isLogin) {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBkkYMw5FEWtgta88nSsg-l64wiPxGOuCY";
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBkkYMw5FEWtgta88nSsg-l64wiPxGOuCY';
     } else {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBkkYMw5FEWtgta88nSsg-l64wiPxGOuCY";
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBkkYMw5FEWtgta88nSsg-l64wiPxGOuCY';
     }
     fetch(url, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({
-        email: loginEmailValue,
-        password: loginPasswordValue,
+        email: enteredEmail,
+        password: enteredPassword,
         returnSecureToken: true,
       }),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((res) => {
@@ -40,72 +49,58 @@ const AuthForm = () => {
         if (res.ok) {
           return res.json();
         } else {
-          return res.json().then(() => {
-            let errorMessage = "Authentication faild";
+          return res.json().then((data) => {
+            let errorMessage = 'Authentication failed!';
+            console.log('data error:',data);
             // if (data && data.error && data.error.message) {
             //   errorMessage = data.error.message;
             // }
+
             throw new Error(errorMessage);
           });
         }
       })
       .then((data) => {
-        console.log("data:", data);
+        authCtx.login(data.idToken);
+        console.log('data:',data);
       })
       .catch((err) => {
         alert(err.message);
       });
   };
+
   return (
-    <Form
-      onSubmit={submitHandler}
-      className="mx-auto my-3 w-25 bg-light rounded"
-    >
-      <h1 className="d-flex flex-column align-items-center">
-        {isLoginForm ? "Log In" : "Sign Up"}
-      </h1>
-      <Form.Group
-        className="m-3 d-flex flex-column align-items-center"
-        controlId="formBasicEmail"
-      >
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          ref={loginEmailRef}
-          type="email"
-          placeholder="Enter email"
-        />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
-
-      <Form.Group
-        className="m-3 d-flex flex-column align-items-center"
-        controlId="formBasicPassword"
-      >
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          ref={loginPasswordRef}
-          type="password"
-          placeholder="Password"
-        />
-      </Form.Group>
-      <Form.Group className="d-flex flex-column flex-item-center">
-        {!isLoading && (
-          <Button className="mx-auto" variant="primary" type="submit">
-            {isLoginForm ? "Log in" : "Create new account"}
-          </Button>
-        )}
-
-        {isLoading && <p>Loading...</p>}
-        <button
-          className="btn mx-auto border-0 text-danger my-3"
-          onClick={switchAuthModeHandler}
-        >
-          {isLoginForm ? "create new account" : "login with existing account"}
-        </button>
-      </Form.Group>
-    </Form>
+    <section className={classes.auth}>
+      <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
+      <form onSubmit={submitHandler}>
+        <div className={classes.control}>
+          <label htmlFor='email'>Your Email</label>
+          <input type='email' id='email' required ref={emailInputRef} />
+        </div>
+        <div className={classes.control}>
+          <label htmlFor='password'>Your Password</label>
+          <input
+            type='password'
+            id='password'
+            required
+            ref={passwordInputRef}
+          />
+        </div>
+        <div className={classes.actions}>
+          {!isLoading && (
+            <button>{isLogin ? 'Login' : 'Create Account'}</button>
+          )}
+          {isLoading && <p>Sending request...</p>}
+          <button
+            type='button'
+            className={classes.toggle}
+            onClick={switchAuthModeHandler}
+          >
+            {isLogin ? 'Create new account' : 'Login with existing account'}
+          </button>
+        </div>
+      </form>
+    </section>
   );
 };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import {
   Navbar,
@@ -14,7 +15,10 @@ const Header = () => {
   return (
     <Navbar className="mx-100 p-2" bg="light" expand="lg">
       <Container fluid>
+      <Link to="/">
+        {/* <div className={classes.logo}>React Auth</div> */}
         <Navbar.Brand href="#">Group Buying</Navbar.Brand>
+      </Link>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
