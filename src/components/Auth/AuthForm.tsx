@@ -1,15 +1,15 @@
-import { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 import AuthContext from "../../store/auth-context";
 import classes from "./AuthForm.module.css";
 
 const AuthForm = () => {
-  const emailInputRef = useRef();
-  const passwordInputRef = useRef();
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
 
-  const authCtx = useContext(AuthContext);
+  const authCtx: any = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,11 +18,11 @@ const AuthForm = () => {
     setIsLogin((prevState) => !prevState);
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
+    const enteredEmail = emailInputRef.current!.value;
+    const enteredPassword = passwordInputRef.current!.value;
 
     // optional: Add validation
 

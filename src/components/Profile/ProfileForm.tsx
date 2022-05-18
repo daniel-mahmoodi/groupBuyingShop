@@ -1,17 +1,17 @@
-import { useRef, useContext } from "react";
+import React, { useRef, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 
 import classes from "./ProfileForm.module.css";
 
 const ProfileForm = () => {
-  const authCtx = useContext(AuthContext);
+  const authCtx: any = useContext(AuthContext);
   const history = useHistory();
-  const inputChangePasswordRef = useRef();
-  const submitHandler = (event) => {
+  const inputChangePasswordRef = useRef<HTMLInputElement>(null);
+  const submitHandler = (event: any) => {
     event.preventDefault();
 
-    const enteredPAssword = inputChangePasswordRef.current.value;
+    const enteredPAssword = inputChangePasswordRef.current!.value;
     fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyBkkYMw5FEWtgta88nSsg-l64wiPxGOuCY",
       {

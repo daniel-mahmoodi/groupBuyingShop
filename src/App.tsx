@@ -8,8 +8,8 @@ import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 import AuthContext from "./store/auth-context";
 
-function App() {
-  const authCtx = useContext(AuthContext);
+const App = () => {
+  const authCtx: any = useContext(AuthContext);
   return (
     <Layout>
       <Switch>
@@ -31,6 +31,6 @@ function App() {
       </Switch>
     </Layout>
   );
-}
+};
 
 export default App;
