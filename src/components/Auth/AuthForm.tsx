@@ -9,7 +9,7 @@ const AuthForm = () => {
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
 
-  const authCtx: any = useContext(AuthContext);
+  const authCtx = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);

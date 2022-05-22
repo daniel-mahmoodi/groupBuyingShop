@@ -1,19 +1,32 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
+
 let logoutTimer: any;
+
 type AuthContextType = {
-  token: any;
+  token: string | null | undefined;
   isLoggedIn: boolean;
-  login: (token: any, expirationTime: any) => void;
+  login: (token: string, expirationTime: string) => void;
   logout: () => void;
+  items: any[];
+  totalAmount: number;
+  addItem: (item: any) => void;
+  removeItem: (id: any) => void;
+  clearCart: () => void;
 };
-export const AuthContext = React.createContext<AuthContextType>({
+
+const AuthContext = React.createContext<AuthContextType>({
   token: "",
   isLoggedIn: false,
-  login: (token: any) => {},
+  login: (token, expirationTime) => {},
   logout: () => {},
+  items: [],
+  totalAmount: 0,
+  addItem: (item) => {},
+  removeItem: (id) => {},
+  clearCart: () => {},
 });
 
-const calculateRemainingTime = (expirationTime: any) => {
+const calculateRemainingTime = (expirationTime: string) => {
   const currentTime = new Date().getTime();
   const adjExpirationTime = new Date(expirationTime).getTime();
 
@@ -24,7 +37,7 @@ const calculateRemainingTime = (expirationTime: any) => {
 
 const retrieveStoredToken = () => {
   const storedToken = localStorage.getItem("token");
-  const storedExpirationDate = localStorage.getItem("expirationTime");
+  const storedExpirationDate: any = localStorage.getItem("expirationTime");
 
   const remainingTime = calculateRemainingTime(storedExpirationDate);
 
@@ -40,7 +53,71 @@ const retrieveStoredToken = () => {
   };
 };
 
-export const AuthContextProvider: React.FC = (props: any) => {
+const defaultCartState = {
+  items: [],
+  totalAmount: 0,
+};
+
+const cartReducer = (state: any, action: any) => {
+  if (action.type === "ADD") {
+    const updatedTotalAmount =
+      state.totalAmount + action.item.price * action.item.amount;
+
+    const existingCartItemIndex = state.items.findIndex(
+      (item: any) => item.id === action.item.id
+    );
+    const existingCartItem = state.items[existingCartItemIndex];
+    let updatedItems;
+
+    if (existingCartItem) {
+      const updatedItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount + action.item.amount,
+      };
+      updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      updatedItems = state.items.concat(action.item);
+    }
+
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
+    };
+  }
+  if (action.type === "REMOVE") {
+    const existingCartItemIndex = state.items.findIndex(
+      (item: any) => item.id === action.id
+    );
+    const existingItem = state.items[existingCartItemIndex];
+    const updatedTotalAmount = state.totalAmount - existingItem.price;
+    let updatedItems;
+    if (existingItem.amount === 1) {
+      updatedItems = state.items.filter((item: any) => item.id !== action.id);
+    } else {
+      const updatedItem = { ...existingItem, amount: existingItem.amount - 1 };
+      updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    }
+
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
+    };
+  }
+
+  if (action.type === "CLEAR") {
+    return defaultCartState;
+  }
+
+  return defaultCartState;
+};
+//------------------------------AuthContextProvider-------------------------------------------
+export const AuthContextProvider = (props: any) => {
+  const [cartState, dispatchCartAction] = useReducer(
+    cartReducer,
+    defaultCartState
+  );
   const tokenData = retrieveStoredToken();
 
   let initialToken;
@@ -79,11 +156,28 @@ export const AuthContextProvider: React.FC = (props: any) => {
     }
   }, [tokenData, logoutHandler]);
 
+  const addItemToCartHandler = (item: any) => {
+    dispatchCartAction({ type: "ADD", item: item });
+  };
+
+  const removeItemFromCartHandler = (id: any) => {
+    dispatchCartAction({ type: "REMOVE", id: id });
+  };
+
+  const clearCartHandler = () => {
+    dispatchCartAction({ type: "CLEAR" });
+  };
+
   const contextValue: AuthContextType = {
     token: token,
     isLoggedIn: userIsLoggedIn,
     login: loginHandler,
     logout: logoutHandler,
+    items: cartState.items,
+    totalAmount: cartState.totalAmount,
+    addItem: addItemToCartHandler,
+    removeItem: removeItemFromCartHandler,
+    clearCart: clearCartHandler,
   };
 
   return (
