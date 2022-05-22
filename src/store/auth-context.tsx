@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { AuthContextType } from "../../typings";
 let logoutTimer: any;
-const AuthContext = React.createContext<AuthContextType | null>({
+type AuthContextType = {
+  token: any;
+  isLoggedIn: boolean;
+  login: (token: any, expirationTime: any) => void;
+  logout: () => void;
+};
+export const AuthContext = React.createContext<AuthContextType>({
   token: "",
   isLoggedIn: false,
   login: (token: any) => {},
@@ -35,7 +40,7 @@ const retrieveStoredToken = () => {
   };
 };
 
-export const AuthContextProvider = (props: any) => {
+export const AuthContextProvider: React.FC = (props: any) => {
   const tokenData = retrieveStoredToken();
 
   let initialToken;
@@ -57,7 +62,7 @@ export const AuthContextProvider = (props: any) => {
     }
   }, []);
 
-  const loginHandler = (token: any, expirationTime:any) => {
+  const loginHandler = (token: any, expirationTime: any) => {
     setToken(token);
     localStorage.setItem("token", token);
     localStorage.setItem("expirationTime", expirationTime);
@@ -74,7 +79,7 @@ export const AuthContextProvider = (props: any) => {
     }
   }, [tokenData, logoutHandler]);
 
-  const contextValue: any = {
+  const contextValue: AuthContextType = {
     token: token,
     isLoggedIn: userIsLoggedIn,
     login: loginHandler,

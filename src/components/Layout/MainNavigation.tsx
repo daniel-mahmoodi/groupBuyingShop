@@ -1,12 +1,11 @@
-import React from "react";
-import { useContext } from "react";
+import React,{ useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import AuthContext from "../../store/auth-context";
+import {AuthContext} from "../../store/auth-context";
 import classes from "./MainNavigation.module.css";
 
 const MainNavigation: React.FC = () => {
-  const authCtx: any = useContext(AuthContext);
+  const authCtx = useContext(AuthContext);
   const history = useHistory();
   const isLoggedIn = authCtx.isLoggedIn;
   const logOutHandler: any = () => {
