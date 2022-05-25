@@ -1,11 +1,17 @@
-import React from 'react';
-import classes from './CartItem.module.css';
-
-const CartItem:React.FC = (props:any) => {
+import React from "react";
+import classes from "./CartItem.module.css";
+interface cartItemType {
+  price: any;
+  name: any;
+  amount: any;
+  onRemove: () => void;
+  onAdd: () => void;
+}
+const CartItem: React.FC<cartItemType> = (props) => {
   const price = `$${props.price.toFixed(2)}`;
 
   return (
-    <li className={classes['cart-item']}>
+    <li className={classes["cart-item"]}>
       <div>
         <h2>{props.name}</h2>
         <div className={classes.summary}>

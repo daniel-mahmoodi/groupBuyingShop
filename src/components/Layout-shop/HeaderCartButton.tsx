@@ -4,7 +4,7 @@ import CartIcon from "../Cart-shop/CartIcon";
 import AuthContext from "../../store/auth-context";
 import classes from "./HeaderCartButton.module.css";
 
-const HeaderCartButton:React.FC = (props: any) => {
+const HeaderCartButton: React.FC<{ onClick: () => void }> = (props) => {
   const [btnIsHighlighted, setBtnIsHighlighted] = useState(false);
   const cartCtx = useContext(AuthContext);
 

@@ -6,7 +6,19 @@ import classes from "./Cart.module.css";
 import AuthContext from "../../store/auth-context";
 import Checkout from "./Checkout";
 
-const Cart: React.FC = (props: any) => {
+interface ConfirmationCartProps {
+  onConfirm: () => void;
+  onClose: () => void;
+  onCancel: () => void;
+  name: () => void;
+  amount: () => void;
+  price: () => void;
+  onRemove: () => void;
+  onAdd: () => void;
+  submitOrderHandler: () => void;
+}
+
+const Cart: React.FC<ConfirmationCartProps> = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);

@@ -1,11 +1,14 @@
-import React, {useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import classes from "./Checkout.module.css";
 
 const isEmpty = (value: any) => value.trim() === "";
 const isFiveChars = (value: any) => value.trim().length === 5;
 
-const Checkout: React.FC = (props:any) => {
+const Checkout: React.FC<{
+  onCancel: () => void;
+  onConfirm: (confirmObjectType:any) => void;
+}> = (props) => {
   const [formInputsValidity, setFormInputsValidity] = useState({
     name: true,
     street: true,

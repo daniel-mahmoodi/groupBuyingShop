@@ -5,8 +5,13 @@ import classes from "./MealItem.module.css";
 import AuthContext from "../../../store/auth-context";
 
 type addToCartHandlerType = (amount: any) => void;
-
-const MealItem: React.FC = (props:any) => {
+interface confirmEalItemType {
+  price: any;
+  id: any;
+  name: any;
+  description: any;
+}
+const MealItem: React.FC<confirmEalItemType> = (props) => {
   const cartCtx = useContext(AuthContext);
 
   const price: any = `$${props.price.toFixed(2)}`;

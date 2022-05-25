@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import Card from '../UI-shop/Card';
-import MealItem from './MealItem/MealItem';
-import classes from './AvailableMeals.module.css';
+import Card from "../UI-shop/Card";
+import MealItem from "./MealItem/MealItem";
+import classes from "./AvailableMeals.module.css";
+import { type } from "os";
 
-const AvailableMeals = () => {
+const AvailableMeals: React.FC = () => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState();
@@ -12,16 +13,16 @@ const AvailableMeals = () => {
   useEffect(() => {
     const fetchMeals = async () => {
       const response = await fetch(
-        'https://react-http-6b4a6.firebaseio.com/meals.json'
+        "https://react-http-6b4a6.firebaseio.com/meals.json"
       );
 
       if (!response.ok) {
-        throw new Error('Something went wrong!');
+        throw new Error("Something went wrong!");
       }
 
       const responseData = await response.json();
 
-      const loadedMeals:any = [];
+      const loadedMeals: any = [];
 
       for (const key in responseData) {
         loadedMeals.push({
@@ -57,8 +58,13 @@ const AvailableMeals = () => {
       </section>
     );
   }
-
-  const mealsList = meals.map((meal) => (
+  type Props = {
+    id: any;
+    name: any;
+    description: any;
+    price: any;
+  };
+  const mealsList = meals.map((meal: Props) => (
     <MealItem
       key={meal.id}
       id={meal.id}
