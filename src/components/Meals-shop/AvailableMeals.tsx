@@ -12,22 +12,25 @@ const AvailableMeals: React.FC = () => {
 
   useEffect(() => {
     const fetchMeals = async () => {
+      console.log('fetch');
       const response = await fetch(
-        "https://react-http-6b4a6.firebaseio.com/meals.json"
+        'https://fakestoreapi.com/products'
       );
 
       if (!response.ok) {
+        console.log("wrong response is not ok");
         throw new Error("Something went wrong!");
       }
 
       const responseData = await response.json();
-
+console.log('responseData',responseData);
       const loadedMeals: any = [];
 
       for (const key in responseData) {
         loadedMeals.push({
           id: key,
-          name: responseData[key].name,
+          name: responseData[key].title,
+          image: responseData[key].image,
           description: responseData[key].description,
           price: responseData[key].price,
         });
@@ -52,6 +55,7 @@ const AvailableMeals: React.FC = () => {
   }
 
   if (httpError) {
+    console.log("error");
     return (
       <section className={classes.MealsError}>
         <p>{httpError}</p>
@@ -61,6 +65,7 @@ const AvailableMeals: React.FC = () => {
   type Props = {
     id: any;
     name: any;
+    image: any;
     description: any;
     price: any;
   };
@@ -69,6 +74,7 @@ const AvailableMeals: React.FC = () => {
       key={meal.id}
       id={meal.id}
       name={meal.name}
+      image={meal.image}
       description={meal.description}
       price={meal.price}
     />

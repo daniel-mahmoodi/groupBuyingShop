@@ -1,7 +1,10 @@
-import React,{ useContext } from "react";
+import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import AuthContext from "../../store/auth-context";
+import HeaderCartButton from "../Layout-shop/HeaderCartButton";
+import mealsImage from "../../assets-shop/meals.jpg";
+// import classes from "./Header.module.css";
 import classes from "./MainNavigation.module.css";
 
 const MainNavigation: React.FC = () => {
@@ -15,13 +18,22 @@ const MainNavigation: React.FC = () => {
   return (
     <header className={classes.header}>
       <Link to="/">
-        <div className={classes.logo}>React Auth</div>
+        <div className={classes.logo}>GroupBuying App</div>
       </Link>
+
       <nav>
         <ul>
           {!isLoggedIn && (
             <li>
               <Link to="/auth">Login</Link>
+            </li>
+          )}
+          {!isLoggedIn && (
+            <li>
+              <Link to="/HeaderCartButton">
+                {/* <HeaderCartButton onClick={props.onShowCart} /> */}
+                HeaderCartButton
+              </Link>
             </li>
           )}
           {isLoggedIn && (

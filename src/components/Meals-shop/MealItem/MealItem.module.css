@@ -9,6 +9,13 @@
 .meal h3 {
   margin: 0 0 0.25rem 0;
 }
+.image{
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 200px;
+  padding: 60px 30px 0 30px;
+  margin-top: 50px;
+}
 
 .description {
   font-style: italic;

@@ -3,7 +3,7 @@ import { Fragment } from "react";
 
 import MainNavigation from "./MainNavigation";
 
-const Layout: React.FC<any> = (props) => {
+const Layout: React.FC<{ children: any }> = (props) => {
   return (
     <Fragment>
       <MainNavigation />

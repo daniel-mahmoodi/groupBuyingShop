@@ -9,6 +9,7 @@ interface confirmEalItemType {
   price: any;
   id: any;
   name: any;
+  image: any;
   description: any;
 }
 const MealItem: React.FC<confirmEalItemType> = (props) => {
@@ -19,6 +20,7 @@ const MealItem: React.FC<confirmEalItemType> = (props) => {
     cartCtx.addItem({
       id: props.id,
       name: props.name,
+      image: props.image,
       amount: amount,
       price: props.price,
     });
@@ -27,6 +29,7 @@ const MealItem: React.FC<confirmEalItemType> = (props) => {
   return (
     <li className={classes.meal}>
       <div>
+        <img src={props.image} alt="" className={classes.image}/>
         <h3>{props.name}</h3>
         <div className={classes.description}>{props.description}</div>
         <div className={classes.price}>{price}</div>

@@ -7,7 +7,6 @@ import classes from "./HeaderCartButton.module.css";
 const HeaderCartButton: React.FC<{ onClick: () => void }> = (props) => {
   const [btnIsHighlighted, setBtnIsHighlighted] = useState(false);
   const cartCtx = useContext(AuthContext);
-
   const { items } = cartCtx;
 
   const numberOfCartItems = items.reduce((curNumber, item) => {
